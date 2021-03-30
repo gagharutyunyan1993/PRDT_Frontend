@@ -3,8 +3,8 @@ import './App.css';
 import {BrowserRouter as Router,Route} from "react-router-dom";
 
 // Components
-import Dashboard from "./secure/Dashboard";
-import Users from "./secure/Users";
+import Dashboard from "./secure/dashboard/Dashboard";
+import Users from "./secure/users/Users";
 
 // Router
 import Login from "./public/Login";

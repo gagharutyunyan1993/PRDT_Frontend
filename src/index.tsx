@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://prdt-b.loc/api/';
+axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+
 
 ReactDOM.render(
   <React.StrictMode>

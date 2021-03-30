@@ -3,6 +3,7 @@ import axios from 'axios';
 
 // Style
 import './Public.css';
+import { Redirect } from 'react-router-dom';
 
 class Register extends Component {
     // Form values
@@ -11,11 +12,13 @@ class Register extends Component {
     email = '';
     password = '';
     passwordConfirm = '';
-
+    state = {
+        redirect: false
+    }
     // Form submit function
     // Method 1
 
-    submit = (e: SyntheticEvent) => {
+    /*    submit = (e: SyntheticEvent) => {
         e.preventDefault();
 
         axios.post('http://prdt-b.loc/api/register', {
@@ -25,11 +28,30 @@ class Register extends Component {
             password: this.password,
             password_confirm: this.passwordConfirm
         }) .then((response) => { console.log(response); }) .catch((error) => { console.log(error); });
+    }*/
 
+    // Method 2
+
+    submit = async (e: SyntheticEvent) => {
+        e.preventDefault();
+
+        await axios.post('register', {
+            first_name: this.first_name,
+            last_name: this.last_name,
+            email: this.email,
+            password: this.password,
+            password_confirm: this.passwordConfirm
+        });
+
+        this.setState({
+            redirect: true
+        })
     }
 
-
     render() {
+        if (this.state.redirect){
+            return <Redirect to={'/login'}/>
+        }
         return (
             <form className="form-signin" onSubmit={this.submit}>
                 <div className={'text-center'}>
