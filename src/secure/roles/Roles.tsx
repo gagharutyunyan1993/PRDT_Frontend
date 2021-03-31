@@ -1,37 +1,37 @@
 import React, {Component} from 'react';
+import {Link} from "react-router-dom";
 import axios from "axios";
-import {Link} from 'react-router-dom';
 
 // Classes
-import {User} from '../../classes/user';
+import {Role} from '../../classes/role';
 
 // Header
 import Wrapper from "../Wrapper";
 
 
-class Users extends Component {
+class Roles extends Component {
     state = {
-        users: []
+        roles: []
     }
     page = 1;
-    lastPage = 0;
+    last_page = 0;
 
     componentDidMount = async () => {
-        const response = await axios.get(`users?page=${this.page}`)
+        const response = await axios.get(`roles?page=${this.page}`)
 
         this.setState({
-            users: response.data.data
+            roles: response.data.data
         })
 
-        this.lastPage = response.data.lastPage;
+        this.last_page = response.data.lastPage
     }
 
     next = async () => {
-        if (this.page === this.lastPage) return;
+        if (this.page === this.last_page) return;
 
         this.page++;
 
-        await this.componentDidMount();
+        await this.componentDidMount()
     }
 
     previous = async () => {
@@ -43,23 +43,22 @@ class Users extends Component {
     }
 
     delete = async (id: number) => {
-        if(window.confirm('Are you sure?')){
-            await axios.delete(`users/${id}`);
+        if (window.confirm('Are you sure?')) {
+            await axios.delete(`roles/${id}`);
 
             this.setState({
-                users: this.state.users.filter((u: User) => u.id !== id)
+                roles: this.state.roles.filter((r: Role) => r.id !== id)
             })
         }
     }
 
     render() {
-        // @ts-ignore
         return (
             <Wrapper>
                 <div
                     className="d-flex justify-content-between flex-wrap flex-md-nowrap align-item-center pt-3 pb-2 mb-3 border-bottom">
                     <div className="btn-toolbar mb-2 mb-md-0">
-                        <Link to={'/users/create'} className="btn btn-sm btn-outline-secondary">Add</Link>
+                        <Link to={'/roles/create'} className="btn btn-sm btn-outline-secondary">Add</Link>
                     </div>
                 </div>
                 <div className="table-responsive">
@@ -68,26 +67,23 @@ class Users extends Component {
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {this.state.users.map(
-                            (user: User) => {
+                        {this.state.roles.map(
+                            (role: Role) => {
                                 return (
                                     <tr>
-                                        <td>{user.id}</td>
-                                        <td>{user.first_name} {user.last_name}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.role.name}</td>
+                                        <td>{role.id}</td>
+                                        <td>{role.name}</td>
                                         <td>
                                             <div>
-                                                <Link to={`users/${user.id}/edit`} className="btn btn-outline-secondary">Edit</Link>
+                                                <Link to={`roles/${role.id}/edit`}
+                                                      className="btn btn-outline-secondary">Edit</Link>
                                                 <a href="/#"
-                                                    className="btn btn-outline-secondary"
-                                                    onClick={() => this.delete(user.id)}>
+                                                   className="btn btn-outline-secondary"
+                                                   onClick={() => this.delete(role.id)}>
                                                     Delete
                                                 </a>
                                             </div>
@@ -100,20 +96,9 @@ class Users extends Component {
                         </tbody>
                     </table>
                 </div>
-
-                <nav>
-                    <ul className='pagination'>
-                        <li className='page-item'>
-                            <button className="page-link" onClick={this.previous}>Previous</button>
-                        </li>
-                        <li className='page-item'>
-                            <button className="page-link" onClick={this.next}>Next</button>
-                        </li>
-                    </ul>
-                </nav>
             </Wrapper>
         );
     }
 }
 
-export default Users;
+export default Roles;
