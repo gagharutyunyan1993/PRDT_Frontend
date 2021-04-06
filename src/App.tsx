@@ -14,6 +14,7 @@ import Roles from "./secure/roles/Roles";
 import RoleCreate from "./secure/roles/RoleCreate";
 import RoleEdit from "./secure/roles/RoleEdit";
 import Products from "./secure/products/Products";
+import ProductCreate from "./secure/products/ProductCreate";
 
 // APP
 function App() {
@@ -38,8 +39,8 @@ function App() {
                 <Route path={'/roles/:id/edit'} component={RoleEdit}/>
 
                 {/* Products Router */}
-
                 <Route path={'/products'} component={Products} exact/>
+                <Route path={'/products/create'} component={ProductCreate}/>
             </Router>
         </div>
     );
