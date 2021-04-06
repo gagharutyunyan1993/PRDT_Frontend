@@ -5,7 +5,8 @@ import {Redirect} from "react-router-dom";
 
 class ProductCreate extends Component {
     state = {
-        redirect: false
+        redirect: false,
+        img: ''
     }
 
     title = '';
@@ -27,6 +28,23 @@ class ProductCreate extends Component {
             redirect: true
         })
     }
+
+    upload = async (files: FileList | null) => {
+        if (files === null) return;
+
+        const data = new FormData();
+
+        data.append('img', files[0]);
+
+        const response = await axios.post('upload',data);
+
+        this.img = response.data;
+
+        this.setState({
+            img: this.img
+        })
+    }
+
     render() {
         if(this.state.redirect){
             return <Redirect to={'/products'}/>
@@ -49,7 +67,7 @@ class ProductCreate extends Component {
                             className="form-control"
                             name="description"
                             onChange={e => this.desc = e.target.value}
-                        ></textarea>
+                        />
                     </div>
                     <div className="form-group">
                         <label>Image</label>
@@ -57,13 +75,16 @@ class ProductCreate extends Component {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="image"
+                                name="img"
+                                value={this.img = this.state.img}
                                 onChange={e => this.img = e.target.value}
                             />
                             <div className="input-group-append">
                                 <label className="btn btn-primary">
                                     Upload
-                                    <input type="file" hidden/>
+                                    <input type="file"
+                                           onChange={e => this.upload(e.target.files)}
+                                           hidden/>
                                 </label>
                             </div>
                         </div>
