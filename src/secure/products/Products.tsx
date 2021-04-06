@@ -1,46 +1,31 @@
 import React, {Component} from 'react';
+import Wrapper from "../Wrapper";
 import {Link} from "react-router-dom";
 import axios from "axios";
-
-// Classes
-import {Role} from '../../classes/role';
-
-// Header
-import Wrapper from "../Wrapper";
+import {Product} from "../../classes/product";
 import Paginator from "../components/Paginator";
 import Deleter from "../components/Deleter";
 
-
-class Roles extends Component {
+class Products extends Component{
     state = {
-        roles: []
+        products: [],
     }
     page = 1;
     last_page = 0;
 
     componentDidMount = async () => {
-        const response = await axios.get(`roles?page=${this.page}`)
+        const response = await axios.get(`/products?page=${this.page}`);
 
         this.setState({
-            roles: response.data.data
+            products: response.data.data
         })
 
-        this.last_page = response.data.last_page
-    }
-
-    delete = async (id: number) => {
-        if (window.confirm('Are you sure?')) {
-            await axios.delete(`roles/${id}`);
-
-            this.setState({
-                roles: this.state.roles.filter((r: Role) => r.id !== id)
-            })
-        }
+        this.last_page = response.data.meta.last_page;
     }
 
     handleDelete = async (id: number) => {
         this.setState({
-            products: this.state.roles.filter((r: Role) => r.id !== id)
+            products: this.state.products.filter((p: Product) => p.id !== id)
         })
     }
 
@@ -56,7 +41,7 @@ class Roles extends Component {
                 <div
                     className="d-flex justify-content-between flex-wrap flex-md-nowrap align-item-center pt-3 pb-2 mb-3 border-bottom">
                     <div className="btn-toolbar mb-2 mb-md-0">
-                        <Link to={'/roles/create'} className="btn btn-sm btn-outline-secondary">Add</Link>
+                        <Link to={'/products/create'} className="btn btn-sm btn-outline-secondary">Add</Link>
                     </div>
                 </div>
                 <div className="table-responsive">
@@ -64,22 +49,28 @@ class Roles extends Component {
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Price</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {this.state.roles.map(
-                            (role: Role) => {
+                        {this.state.products.map(
+                            (product: Product) => {
                                 return (
-                                    <tr>
-                                        <td>{role.id}</td>
-                                        <td>{role.name}</td>
+                                    <tr key={product.id}>
+                                        <td>{product.id}</td>
+                                        <td><img src={product.img} alt='' width="50"/></td>
+                                        <td>{product.title}</td>
+                                        <td>{product.desc}</td>
+                                        <td>{product.price}</td>
                                         <td>
                                             <div>
-                                                <Link to={`roles/${role.id}/edit`}
+                                                <Link to={`product/${product.id}/edit`}
                                                       className="btn btn-outline-secondary">Edit</Link>
-                                                <Deleter id={role.id} endpoint={'roles'} handleDelete={this.handleDelete}/>
+                                                <Deleter id={product.id} endpoint={'products'} handleDelete={this.handleDelete}/>
                                             </div>
                                         </td>
                                     </tr>
@@ -89,10 +80,12 @@ class Roles extends Component {
                         </tbody>
                     </table>
                 </div>
+
                 <Paginator lastPage={this.last_page} handlePageChange={this.handlePageChange}/>
             </Wrapper>
         );
     }
 }
 
-export default Roles;
+
+export default Products;
